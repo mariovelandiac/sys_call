@@ -20,12 +20,13 @@ asmlinkage long avanzatech(int number, char __user *buffer, size_t length, char 
         return -EFAULT;
     }
 
-    // Allocate memory for user
-    if (length <= 0 || length > MAX_NAME_LENGTH)
+    // Validate buffer sizes
+    if (length <= 0 || length > MAX_NAME_LENGTH || length >= dest_len || dest_len <= 0)
     {
         printk(KERN_ERR "Buffer's length invalid\n");
         return -EINVAL;
     }
+    // Allocate memory for user
     char *kernel_buffer = (char *)kmalloc(length, GFP_KERNEL);
     if (kernel_buffer == NULL)
     {
@@ -43,7 +44,7 @@ asmlinkage long avanzatech(int number, char __user *buffer, size_t length, char 
 
     // Validate Number Input and compute the number's cube
     int int_length = sizeof(int) == INT_16 ? INT_16 : INT_32;
-    int MAX_NUMBER = long_length == INT_16 ? MAX_NUM_ALLOWED_16 : MAX_NUM_ALLOWED_32;
+    int MAX_NUMBER = int_length == INT_16 ? MAX_NUM_ALLOWED_16 : MAX_NUM_ALLOWED_32;
     int MIN_NUMBER = -MAX_NUMBER;
     if (number > MAX_NUMBER || number < MIN_NUMBER)
     {
@@ -52,14 +53,6 @@ asmlinkage long avanzatech(int number, char __user *buffer, size_t length, char 
         return -EINVAL;
     }
     int cube_number = number * number * number;
-
-    // Validate buffer size is positive
-    if (dest_len <= 0)
-    {
-        printk(KERN_ERR "Destination Buffer's length invalid\n");
-        kfree(kernel_buffer);
-        return -EINVAL;
-    }
 
     // Calculate total length of response
     const char *FORMAT = "Hi %s, the cube of %d is %d\n";
