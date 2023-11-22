@@ -1,4 +1,11 @@
-#include <linux/avanzatech.h>
+#include <linux/kernel.h>
+#include <linux/slab.h>
+#include <linux/uaccess.h>
+#include <linux/errno.h>
+#include <linux/string.h>
+#include <linux/unistd.h>
+#include <linux/linkage.h>
+
 #define INT_16 2                // 2 bytes int
 #define INT_32 4                // 4 bytes int
 #define MAX_NUM_ALLOWED_16 31   // Max computable cubic for 2 bytes int
