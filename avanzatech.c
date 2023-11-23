@@ -12,7 +12,7 @@
 #define MAX_NUM_ALLOWED_32 1290 // Max computable cubic for 4 bytes int
 #define MAX_NAME_LENGTH 64      // Max name's length allowed
 
-asmlinkage long avanzatech(int number, char __user *buffer, size_t length, char __user *dest_buffer, size_t dest_len)
+asmlinkage long sys_avanzatech(int number, char __user *buffer, size_t length, char __user *dest_buffer, size_t dest_len)
 {
 
     // Validate pointers to read and write
