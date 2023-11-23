@@ -6,26 +6,19 @@
 #include <linux/unistd.h>
 #include <linux/linkage.h>
 
-#define INT_16 2                // 2 bytes int
-#define INT_32 4                // 4 bytes int
-#define MAX_NUM_ALLOWED_16 31   // Max computable cubic for 2 bytes int
-#define MAX_NUM_ALLOWED_32 1290 // Max computable cubic for 4 bytes int
-#define MAX_NAME_LENGTH 64      // Max name's length allowed
+SYSCALL_DEFINE5(avanzatech, int, number, char __user *, name, size_t, name_length, char __user *, dest_buffer, size_t, dest_len) {
+    return sys_avanzatech(number, name, name_length, dest_buffer, dest_len);
+}
 
 asmlinkage long sys_avanzatech(int number, char __user *buffer, size_t length, char __user *dest_buffer, size_t dest_len)
 {
+    int INT_16, INT_32, MAX_NUM_ALLOWED_16, MAX_NUM_ALLOWED_32, MAX_NAME_LENGTH;
 
-    // Validate pointers to read and write
-    if (access_ok(VERIFY_READ, buffer, length) == 0)
-    {
-        printk(KERN_ERR "Buffer's origin could not be read\n");
-        return -EFAULT;
-    }
-    if (access_ok(VERIFY_WRITE, dest_buffer, dest_len) == 0)
-    {
-        printk(KERN_ERR "Buffer's destination cannot be modified\n");
-        return -EFAULT;
-    }
+    INT_16 = 2;             // bits in 2 bytes integer
+    INT_32 = 4;             // bits in 4 bytes integer
+    MAX_NUM_ALLOWED_16 = 31;        // max num argument for cube function with 16 bit int
+    MAX_NUM_ALLOWED_32 = 1290;      // max num argument for cube function with 32 bit int
+    MAX_NAME_LENGTH = 64;   // max name length allowed
 
     // Validate buffer sizes
     if (length <= 0 || length > MAX_NAME_LENGTH || length >= dest_len || dest_len <= 0)
