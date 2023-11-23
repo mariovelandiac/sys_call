@@ -5,14 +5,14 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#define AVANZATECH_SYS_CALL 333
+#define AVANZATECH_SYS_CALL 451
 #define DEST_BUFFER_SIZE 64
 
 int main(int argc, char const *argv[])
 {
     if (argc != 3)
     {
-        printf("The format of input is avanzatech <number> <name>");
+        printf("The format of input is avanzatech <number> <name>\n");
         return EXIT_FAILURE;
     }
 
@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
     strcpy(name, argv[2]);
 
     // Allocating memory for destinaton
-    char *dest_buffer[DEST_BUFFER_SIZE];
+    char dest_buffer[DEST_BUFFER_SIZE];
     size_t dest_len = DEST_BUFFER_SIZE;
 
     long result = syscall(AVANZATECH_SYS_CALL, number, name, name_length, dest_buffer, dest_len);
@@ -41,8 +41,7 @@ int main(int argc, char const *argv[])
         free(name);
         return EXIT_FAILURE;
     }
-
-    printf("System call result: %ld\n", result);
+    printf("%s\n", dest_buffer);
     free(name);
     return EXIT_SUCCESS;
 }
